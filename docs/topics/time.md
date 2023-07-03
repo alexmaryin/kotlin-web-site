@@ -8,6 +8,7 @@ Being able to measure time accurately is important for activities like:
   * Debugging
 
 By default, time is measured using a monotonic time source but other time sources can be configured.
+For more information, see [Create time source](#create-time-source).
 
 ## Durations
 
@@ -106,7 +107,7 @@ as function parameters:
 
 ```kotlin
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
 fun main() {
@@ -268,7 +269,7 @@ fun main() {
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-measure-time"}
 
-To measure the time taken to execute a block of code **and** the elapsed time, use inline function [`measureTimedValue`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/measure-time.html).
+To measure the time taken to execute a block of code **and** return the value of the block of code, use inline function [`measureTimedValue`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/measure-time.html).
 
 For example:
 
@@ -368,7 +369,16 @@ fun main() {
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-deadline=passed"}
 
-## Monotonic time sources
+## Time sources
+
+By default, time is measured using a monotonic time source. Monotonic time sources only move forward and are not affected
+by variations like timezones. An alternative to monotonic time is elapsed real time which is also known as wall-clock time.
+Elapsed real time is time measured relative to another point in time.
+
+This section contains a list of default monotonic time sources per platform, as well as instructions on how to [create
+your own time source](#create-time-source).
+
+### Default time sources per platform
 
 This table explains the default source of monotonic time for each platform:
 
@@ -378,5 +388,29 @@ This table explains the default source of monotonic time for each platform:
 | Kotlin/JS (Node.js) | `process.hrtime()`|
 | Kotlin/JS (Browser) | `window.performance.now()` or `Date.now()`|
 | Kotlin/Native | `std::chrono::high_resolution_clock` or `std::chrono::steady_clock`|
+
+### Create time source
+
+There are some cases where you might want to use a different time source. For example in Android, `System.nanoTime()`
+only counts time while the device is active. It loses track of time when the device enters deep sleep. To keep track of
+time while the device is in deep sleep, you can create a time source that uses [`SystemClock.elapsedRealtimeNanos()`](https://developer.android.com/reference/android/os/SystemClock#elapsedRealtimeNanos()):
+
+```kotlin
+object RealtimeMonotonicTimeSource : AbstractLongTimeSource(DurationUnit.NANOSECONDS) {
+    override fun read(): Long = SystemClock.elapsedRealtimeNanos()
+}
+```
+
+Then you can use your time source to make time measurements:
+
+```kotlin
+fun main() {
+    val elapsed: Duration = RealtimeMonotonicTimeSource.measureTime {
+        Thread.sleep(100)
+    }
+    println(elapsed) // e.g. 103 ms
+}
+```
+{validate="false"}
 
 For more information about the `kotlin.time` package, see our [standard library API reference](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/).
