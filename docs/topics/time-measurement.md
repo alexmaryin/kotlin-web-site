@@ -1,13 +1,13 @@
-[//]: # (title: Time)
+[//]: # (title: Time measurement)
 
-The Kotlin standard library gives you the tools you need to be able to calculate and measure time in different units.
-Being able to measure time accurately is important for activities like:
+The Kotlin standard library gives you the tools to calculate and measure time in different units.
+Accurate time measurement is important for activities like:
   * Managing threads or processes
   * Collecting statistics
   * Detecting timeouts
   * Debugging
 
-By default, time is measured using a monotonic time source but other time sources can be configured.
+By default, time is measured using a monotonic time source, but other time sources can be configured.
 For more information, see [Create time source](#create-time-source).
 
 ## Durations
@@ -23,7 +23,7 @@ enum class:
   * `HOURS`
   * `DAYS`
 
-`Durations` can be positive, negative, zero, positive infinity, or negative infinity.
+A `Duration` can be positive, negative, zero, positive infinity, or negative infinity.
 
 ### Create duration
 
@@ -46,7 +46,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.days
 
 fun main() {
-    //sampleStart
+//sampleStart
     val fiveHundredMilliseconds: Duration = 500.milliseconds
     val zeroSeconds: Duration = 0.seconds
     val tenMinutes: Duration = 10.minutes
@@ -60,19 +60,19 @@ fun main() {
     println(negativeNanosecond)      // -1ns
     println(infiniteDays)            // Infinity
     println(negativeInfiniteDays)    // -Infinity
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-create-duration"}
 
-You can also perform basic arithmetic with `Durations`:
+You can also perform basic arithmetic with `Duration` objects:
 
 ```kotlin
 import kotlin.time.*
 import kotlin.time.Duration.Companion.seconds
 
 fun main() {
-    //sampleStart
+//sampleStart
     val fiveSeconds: Duration = 5.seconds
     val thirtySeconds: Duration = 30.seconds
 
@@ -90,7 +90,7 @@ fun main() {
     // -30s
     println((-thirtySeconds).absoluteValue)
     // 30s
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-create-duration-arithmetic"}
@@ -111,11 +111,11 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.DurationUnit
 
 fun main() {
-    //sampleStart
+//sampleStart
     // Print in seconds with 2 decimal places
     println(5887.milliseconds.toString(DurationUnit.SECONDS, 2))
     // 5.89s
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-string-representation"}
@@ -127,16 +127,16 @@ function:
 import kotlin.time.Duration.Companion.seconds
 
 fun main() {
-    //sampleStart
+//sampleStart
     println(86420.seconds.toIsoString()) // PT24H0M20S
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-iso-string-representation"}
 
 ### Convert duration
 
-To convert your `Duration` into a different `DurationUnit`, you can use the properties:
+To convert your `Duration` into a different `DurationUnit`, use the following properties:
 * `inWholeNanoseconds`
 * `inWholeMicroseconds`
 * `inWholeSeconds`
@@ -151,11 +151,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
-    //sampleStart
+//sampleStart
     val thirtyMinutes: Duration = 30.minutes
     println(thirtyMinutes.inWholeSeconds)
     // 1800
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-convert-duration"}
@@ -172,17 +172,17 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 
 fun main() {
-    //sampleStart
+//sampleStart
     println(270.seconds.toDouble(DurationUnit.MINUTES))
     // 4.5
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-convert-duration-extension"}
 
 ### Compare duration
 
-To check if `Durations` are equal, use the equality operator (`==`):
+To check if `Duration` objects are equal, use the equality operator (`==`):
 
 ```kotlin
 import kotlin.time.Duration
@@ -190,27 +190,27 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
-    //sampleStart
+//sampleStart
     val thirtyMinutes: Duration = 30.minutes
     val halfHour: Duration = 0.5.hours
     println(thirtyMinutes == halfHour)
     // true
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-equality-duration"}
 
-To compare `Durations`, use the comparison operators (`<`, `>`):
+To compare `Duration` objects, use the comparison operators (`<`, `>`):
 
 ```kotlin
 import kotlin.time.Duration.Companion.microseconds
 import kotlin.time.Duration.Companion.nanoseconds
 
 fun main() {
-    //sampleStart
+//sampleStart
     println(3000.microseconds < 25000.nanoseconds)
     // false
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-compare-duration"}
@@ -228,11 +228,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
-    //sampleStart
+//sampleStart
     val thirtyMinutes: Duration = 30.minutes
     println(thirtyMinutes.toComponents { hours, minutes, _, _ -> "${hours}h:${minutes}m" })
     // 0h:30m
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-duration-components"}
@@ -241,7 +241,7 @@ In this example, the lambda expression has `hours` and `minutes` as function par
 unused `seconds` and `nanoseconds` parameters. The expression returns a concatenated string using [string templates](strings.md#string-templates) 
 to get the desired output format of `hours` and `minutes`.
 
-## Time measurement
+## Measure time
 
 To track the passage of time, the standard library provides tools so that you can easily:
 * Measure the time taken to execute some code with your desired time unit.
@@ -259,12 +259,12 @@ inline function:
 import kotlin.time.measureTime
 
 fun main() {
-    //sampleStart
+//sampleStart
     val timeTaken = measureTime {
         Thread.sleep(100)
     }
     println(timeTaken) // e.g. 103 ms
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-measure-time"}
@@ -277,14 +277,14 @@ For example:
 import kotlin.time.measureTimedValue
 
 fun main() {
-    //sampleStart
+//sampleStart
     val (value, timeTaken) = measureTimedValue {
         Thread.sleep(100)
         42
     }
     println(value)     // 42
     println(timeTaken) // e.g. 103 ms
-    //sampleEnd
+//sampleEnd
 }
 ```
 {kotlin-runnable="true" kotlin-min-compiler-version="1.3" id="kotlin-time-measure-timed-value"}
@@ -299,6 +299,7 @@ to create a [`TimeMark`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.tim
 
 ```kotlin
 import kotlin.time.*
+
 fun main() {
 //sampleStart
    val timeSource = TimeSource.Monotonic
@@ -310,14 +311,15 @@ fun main() {
 
 ### Measure differences in time
 
-To measure differences between `TimeMarks` from the same time source, use the subtraction operator (`-`).
+To measure differences between `TimeMark` objects from the same time source, use the subtraction operator (`-`).
 
-To compare `TimeMarks` from the same time source, use the comparison operators (`<`, `>`).
+To compare `TimeMark` objects from the same time source, use the comparison operators (`<`, `>`).
 
 For example:
 
 ```kotlin
 import kotlin.time.*
+
 fun main() {
 //sampleStart
    val timeSource = TimeSource.Monotonic
@@ -373,21 +375,18 @@ fun main() {
 
 By default, time is measured using a monotonic time source. Monotonic time sources only move forward and are not affected
 by variations like timezones. An alternative to monotonic time is elapsed real time which is also known as wall-clock time.
-Elapsed real time is time measured relative to another point in time.
-
-This section contains a list of default monotonic time sources per platform, as well as instructions on how to [create
-your own time source](#create-time-source).
+Elapsed real time is measured relative to another point in time.
 
 ### Default time sources per platform
 
 This table explains the default source of monotonic time for each platform:
 
-| Platform      | Source |
-|---------------|---|
-| Kotlin/JVM    | `System.nanoTime()`|
+| Platform            | Source |
+|---------------------|---|
+| Kotlin/JVM          | `System.nanoTime()`|
 | Kotlin/JS (Node.js) | `process.hrtime()`|
-| Kotlin/JS (Browser) | `window.performance.now()` or `Date.now()`|
-| Kotlin/Native | `std::chrono::high_resolution_clock` or `std::chrono::steady_clock`|
+| Kotlin/JS (browser) | `window.performance.now()` or `Date.now()`|
+| Kotlin/Native       | `std::chrono::high_resolution_clock` or `std::chrono::steady_clock`|
 
 ### Create time source
 
